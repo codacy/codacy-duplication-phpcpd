@@ -7,7 +7,7 @@ import codacy.dockerApi.api.{DuplicationClone, DuplicationCloneFile, Duplication
 import codacy.dockerApi.traits.IDuplicationImpl
 import codacy.dockerApi.utils.CommandRunner
 
-import scala.util.Try
+import scala.util.{Failure, Properties, Success, Try}
 import scala.xml.{Elem, XML}
 
 object PHPCPD extends IDuplicationImpl {
@@ -15,8 +15,28 @@ object PHPCPD extends IDuplicationImpl {
   override def apply(rootPath: Path, config: DuplicationConfiguration): Try[List[DuplicationClone]] = {
     val rootDirectory = rootPath.toFile
     val temporaryFile = Files.createTempFile("codacy-", ".xml").toFile
-    CommandRunner.exec(getCommand(rootDirectory, temporaryFile), Some(rootDirectory))
+    CommandRunner.exec(getCommand(rootDirectory, temporaryFile), Some(rootDirectory)) match {
+      case Right(resultFromTool) =>
+        parseToolResult(rootDirectory, temporaryFile) match {
+          case s@Success(_) => s
+          case Failure(e) =>
+            val msg =
+              s"""
+                 |PHPCPD exited with code ${resultFromTool.exitCode}
+                 |message: ${e.getMessage}
+                 |stdout: ${resultFromTool.stdout.mkString(Properties.lineSeparator)}
+                 |stderr: ${resultFromTool.stderr.mkString(Properties.lineSeparator)}
+                 |StackTrace: ${e.getStackTrace.mkString(System.lineSeparator)}
+                """.stripMargin
+            Failure(new Exception(msg))
+        }
 
+      case Left(e) =>
+        Failure(e)
+    }
+  }
+
+  private def parseToolResult(rootDirectory: File, temporaryFile: File): Try[List[DuplicationClone]] = {
     Try(XML.loadFile(temporaryFile)).flatMap(parseXml(rootDirectory, _))
   }
 
