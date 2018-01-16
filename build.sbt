@@ -47,7 +47,8 @@ val installAll =
      |export COMPOSER_HOME=/opt/composer &&
      |mkdir -p $$COMPOSER_HOME &&
      |apk update &&
-     |apk add bash curl git php php-xml php-cli php-pdo php-curl php-json php-phar php-ctype php-openssl php-dom &&
+     |apk add bash curl git php5 php5-xml php5-cli php5-pdo php5-curl php5-json php5-phar php5-ctype php5-openssl php5-dom &&
+     |ln -s /usr/bin/php5 /usr/bin/php &&
      |curl -sS https://getcomposer.org/installer | php -- --install-dir=/bin --filename=composer &&
      |composer global require "sebastian/phpcpd=2.0.1" &&
      |chmod -R 777 /opt &&
