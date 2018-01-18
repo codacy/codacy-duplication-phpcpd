@@ -41,7 +41,7 @@ object PHPCPD extends IDuplicationImpl {
   }
 
   private def getCommand(rootDirectory: File, outputFile: File): List[String] = {
-    List("phpcpd", "--log-pmd", outputFile.getCanonicalPath, rootDirectory.getCanonicalPath)
+    List("php", "-d", "memory_limit=-1", "/bin/phpcpd", "--log-pmd", outputFile.getCanonicalPath, rootDirectory.getCanonicalPath)
   }
 
   private def parseXml(rootDirectory: File, elem: Elem): Try[List[DuplicationClone]] = {
