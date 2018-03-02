@@ -4,7 +4,7 @@ name := """codacy-duplication-phpcpd"""
 
 version := "1.0.0-SNAPSHOT"
 
-val languageVersion = "2.11.7"
+val languageVersion = "2.11.12"
 
 scalaVersion := languageVersion
 
@@ -23,7 +23,7 @@ enablePlugins(JavaAppPackaging)
 
 enablePlugins(DockerPlugin)
 
-mappings in Universal <++= (resourceDirectory in Compile) map { (resourceDir: File) =>
+mappings.in(Universal) ++= resourceDirectory.in(Compile).map { (resourceDir: File) =>
   val src = resourceDir / "docs"
   val dest = "/docs"
 
@@ -31,7 +31,7 @@ mappings in Universal <++= (resourceDirectory in Compile) map { (resourceDir: Fi
     path <- (src ***).get
     if !path.isDirectory
   } yield path -> path.toString.replaceFirst(src.toString, dest)
-}
+}.value
 
 val dockerUser = "docker"
 val dockerGroup = "docker"
