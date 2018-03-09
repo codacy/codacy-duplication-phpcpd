@@ -1,31 +1,23 @@
+# Codacy Duplication PHPCPD
+
 [![Codacy Badge](https://api.codacy.com/project/badge/grade/d0f04e048bba4a01a7ef0166bf5b8d32)](https://www.codacy.com/app/Codacy/codacy-duplication-phpcpd)
 [![Build Status](https://circleci.com/gh/codacy/codacy-duplication-phpcpd.svg?style=shield&circle-token=:circle-token)](https://circleci.com/gh/codacy/codacy-duplication-phpcpd)
 
-# Codacy Duplication PHPCPD
+## Usage and Docs
 
-## Usage               
+Check the [codacy-duplication-scala-seed](https://github.com/codacy/codacy-duplication-scala-seed) project.
 
-> TODO
-
-## Docs
-
-> TODO
-
-## Test
-
-> TODO
-
-## What is Codacy?
+## What is Codacy
 
 [Codacy](https://www.codacy.com/) is an Automated Code Review Tool that monitors your technical debt, helps you improve your code quality, teaches best practices to your developers, and helps you save time in Code Reviews.
 
-### Among Codacy’s features:
+### Among Codacy’s features
 
- - Identify new Static Analysis issues
- - Commit and Pull Request Analysis with GitHub, BitBucket/Stash, GitLab (and also direct git repositories)
- - Auto-comments on Commits and Pull Requests
- - Integrations with Slack, HipChat, Jira, YouTrack
- - Track issues in Code Style, Security, Error Proneness, Performance, Unused Code and other categories
+* Identify new Static Analysis issues
+* Commit and Pull Request Analysis with GitHub, BitBucket/Stash, GitLab (and also direct git repositories)
+* Auto-comments on Commits and Pull Requests
+* Integrations with Slack, HipChat, Jira, YouTrack
+* Track issues in Code Style, Security, Error Proneness, Performance, Unused Code and other categories
 
 Codacy also helps keep track of Code Coverage, Code Duplication, and Code Complexity.
 
