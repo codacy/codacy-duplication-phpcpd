@@ -1,12 +1,10 @@
-import com.typesafe.sbt.packager.docker.{Cmd, ExecCmd}
+import com.typesafe.sbt.packager.docker.Cmd
 
 name := """codacy-duplication-phpcpd"""
 
 version := "1.0.0-SNAPSHOT"
 
-val languageVersion = "2.11.12"
-
-scalaVersion := languageVersion
+scalaVersion := Dependencies.scalaVersion
 
 resolvers ++= Seq(
   "Typesafe Repo" at "http://repo.typesafe.com/typesafe/releases/",
@@ -14,9 +12,10 @@ resolvers ++= Seq(
 )
 
 libraryDependencies ++= Seq(
-  "com.typesafe.play" %% "play-json" % "2.4.6" withSources(),
-  "org.scala-lang.modules" %% "scala-xml" % "1.0.4" withSources(),
-  "com.codacy" %% "codacy-duplication-scala-seed" % "1.0.2"
+  Dependencies.playJson,
+  Dependencies.scalaXml,
+  Dependencies.duplicationScalaSeed,
+  Dependencies.specs2 % Test
 )
 
 enablePlugins(JavaAppPackaging)
@@ -27,10 +26,10 @@ mappings.in(Universal) ++= resourceDirectory.in(Compile).map { (resourceDir: Fil
   val src = resourceDir / "docs"
   val dest = "/docs"
 
-  for {
-    path <- (src ***).get
+  (for {
+    path <- better.files.File(src.toPath).listRecursively()
     if !path.isDirectory
-  } yield path -> path.toString.replaceFirst(src.toString, dest)
+  } yield path.toJava -> path.toString.replaceFirst(src.toString, dest)).toSeq
 }.value
 
 val dockerUser = "docker"
@@ -40,7 +39,7 @@ daemonUser in Docker := dockerUser
 
 daemonGroup in Docker := dockerGroup
 
-dockerBaseImage := "frolvlad/alpine-oraclejdk8"
+dockerBaseImage := "library/openjdk:8-jre-alpine"
 
 val installAll =
   s"""
