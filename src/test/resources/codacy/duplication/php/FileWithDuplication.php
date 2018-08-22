@@ -1,8 +1,11 @@
 <?php
-class BinaryTree
+class Thang
 {
 
-    public function insertooo($item) {
+    protected function thing(){
+        return;
+    }
+    public function insert($item) {
         $node = new BinaryNode($item);
         if ($this->isEmpty()) {
             // special case if tree is empty
@@ -37,9 +40,8 @@ class BinaryTree
                 // keep trying to insert left
                 $this->insertNode($node, $subtree->left);
             }
-            else {
-                // reject duplicates
-            }
         }
     }
+
+
 }

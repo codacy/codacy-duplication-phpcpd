@@ -44,23 +44,15 @@ class PHPCPDSpec extends Specification {
       |            }
       |            else if ($node->value < $subtree->value) {
       |                // keep trying to insert left
-      |                $this->insertNode($node, $subtree->left);
-      |            }
       |""".stripMargin
   private val expectedDuplication = List(
     DuplicationClone(
       cloneLines = expectedCloneLines,
-      nrTokens = 83,
-      nrLines = 36,
+      nrTokens = 85,
+      nrLines = 34,
       files = List(
-        DuplicationCloneFile("codacy/duplication/php/FileWithDuplication1.php",
-                             4,
-                             40),
-        DuplicationCloneFile("codacy/duplication/php/FileWithDuplication.php",
-                             5,
-                             41)
-      )
-    ))
+        DuplicationCloneFile("codacy/duplication/php/FileWithDuplication1.php", 4, 38),
+        DuplicationCloneFile("codacy/duplication/php/FileWithDuplication.php", 8, 42))))
 
   private val targetDir = "src/test/resources/"
 
@@ -68,11 +60,8 @@ class PHPCPDSpec extends Specification {
 
     "get duplication results" in {
 
-      val duplicationResults: Try[List[DuplicationClone]] = PHPCPD(
-        path = Source.Directory(targetDir),
-        language = Some(Languages.PHP),
-        options = Map.empty
-      )
+      val duplicationResults: Try[List[DuplicationClone]] =
+        PHPCPD(path = Source.Directory(targetDir), language = Some(Languages.PHP), options = Map.empty)
 
       duplicationResults must beLike {
         case Success(duplication) =>
@@ -83,16 +72,12 @@ class PHPCPDSpec extends Specification {
 
     "fail" in {
       "wrong language" in {
-        val duplicationResults: Try[List[DuplicationClone]] = PHPCPD(
-          path = Source.Directory(targetDir),
-          language = Some(Languages.Scala),
-          options = Map.empty
-        )
+        val duplicationResults: Try[List[DuplicationClone]] =
+          PHPCPD(path = Source.Directory(targetDir), language = Some(Languages.Scala), options = Map.empty)
 
         duplicationResults must beLike {
           case Failure(e) =>
-            e.getMessage must beEqualTo(
-              s"PHPCPD only supports PHP. Provided language: ${Languages.Scala.name}")
+            e.getMessage must beEqualTo(s"PHPCPD only supports PHP. Provided language: ${Languages.Scala.name}")
         }
       }
     }

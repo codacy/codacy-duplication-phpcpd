@@ -4,11 +4,7 @@ import java.io.File
 import java.nio.file.Paths
 
 import codacy.docker.api.{DuplicationConfiguration, Source}
-import codacy.docker.api.duplication.{
-  DuplicationClone,
-  DuplicationCloneFile,
-  DuplicationTool
-}
+import codacy.docker.api.duplication.{DuplicationClone, DuplicationCloneFile, DuplicationTool}
 import codacy.docker.api.utils.{CommandResult, CommandRunner}
 import com.codacy.api.dtos.{Language, Languages}
 
@@ -19,14 +15,10 @@ object PHPCPD extends DuplicationTool {
 
   def apply(path: Source.Directory,
             language: Option[Language],
-            options: Map[DuplicationConfiguration.Key,
-                         DuplicationConfiguration.Value])
-    : Try[List[DuplicationClone]] = {
+            options: Map[DuplicationConfiguration.Key, DuplicationConfiguration.Value]): Try[List[DuplicationClone]] = {
     language match {
       case Some(lang) if lang != Languages.PHP =>
-        Failure(
-          new Exception(
-            s"PHPCPD only supports PHP. Provided language: ${lang.name}"))
+        Failure(new Exception(s"PHPCPD only supports PHP. Provided language: ${lang.name}"))
       case _ =>
         val rootDirectory = better.files.File(path.path).toJava
         withOutputFile { outputFile: File =>
@@ -39,28 +31,20 @@ object PHPCPD extends DuplicationTool {
     }
   }
 
-  private def runTool(rootDirectory: File,
-                      outputFile: File): Try[CommandResult] = {
+  private def runTool(rootDirectory: File, outputFile: File): Try[CommandResult] = {
     val command = getCommand(rootDirectory, outputFile)
     CommandRunner.exec(command, Option(rootDirectory)).toTry
   }
 
-  private def parseToolResult(
-      rootDirectory: File,
-      temporaryFile: File): Try[List[DuplicationClone]] = {
+  private def parseToolResult(rootDirectory: File, temporaryFile: File): Try[List[DuplicationClone]] = {
     Try(XML.loadFile(temporaryFile)).flatMap(parseXml(rootDirectory, _))
   }
 
-  private def getCommand(rootDirectory: File,
-                         outputFile: File): List[String] = {
-    List("phpcpd",
-         "--log-pmd",
-         outputFile.getCanonicalPath,
-         rootDirectory.getCanonicalPath)
+  private def getCommand(rootDirectory: File, outputFile: File): List[String] = {
+    List("phpcpd", "--log-pmd", outputFile.getCanonicalPath, rootDirectory.getCanonicalPath)
   }
 
-  private def parseXml(rootDirectory: File,
-                       elem: Elem): Try[List[DuplicationClone]] = {
+  private def parseXml(rootDirectory: File, elem: Elem): Try[List[DuplicationClone]] = {
     Try {
       (elem \ "duplication").map { duplication =>
         val tokens = (duplication \ "@tokens").text.toInt

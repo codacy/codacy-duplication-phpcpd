@@ -5,7 +5,7 @@ resolvers ++= Seq(
 libraryDependencies += "com.github.pathikrit" %% "better-files" % "3.6.0"
 
 // Static Analysis
-//addSbtPlugin("com.sksamuel.scapegoat" %% "sbt-scapegoat" % "1.0.7")
+addSbtPlugin("com.sksamuel.scapegoat" %% "sbt-scapegoat" % "1.0.7")
 addSbtPlugin("ch.epfl.scala" % "sbt-scalafix" % "0.5.10")
 
 // Formating

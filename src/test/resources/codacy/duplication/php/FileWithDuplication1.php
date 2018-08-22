@@ -37,9 +37,6 @@ class BinaryTree
                 // keep trying to insert left
                 $this->insertNode($node, $subtree->left);
             }
-            else {
-                // reject duplicates
-            }
         }
     }
 }
