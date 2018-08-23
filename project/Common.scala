@@ -13,16 +13,14 @@ object Common {
 
   private val installPHPCPD =
     s"""
-       |export COMPOSER_HOME=/opt/composer &&
-       |mkdir -p $$COMPOSER_HOME &&
+       |export COMPOSER_HOME=/home/docker/.composer &&
+       |mkdir -p /home/docker/.composer &&
+       |chown -R docker:docker /home/docker &&
        |apk update &&
-       |apk add bash curl git php5 php5-xml php5-cli php5-pdo php5-curl php5-json php5-phar php5-ctype php5-openssl php5-dom &&
-       |ln -s /usr/bin/php5 /usr/bin/php &&
-       |curl -sS https://getcomposer.org/installer | php -- --install-dir=/bin --filename=composer &&
-       |composer global require "sebastian/phpcpd=$phpCPDVersion" &&
-       |chmod -R 777 /opt &&
-       |ln -s /opt/composer/vendor/bin/phpcpd /bin/phpcpd &&
-       |rm -rf /bin/composer &&
+       |apk add bash curl git php7 php7-xml php7-cli php7-pdo php7-curl php7-json php7-phar php7-ctype php7-openssl php7-dom php7-mbstring php7-iconv &&
+       |curl -sS https://getcomposer.org/installer | php7 -- --install-dir=/usr/bin --filename=composer &&
+       |su - docker -c 'composer global require "sebastian/phpcpd=$phpCPDVersion"' &&
+       |rm -rf /usr/bin/composer &&
        |rm -rf /tmp/* &&
        |rm -rf /var/cache/apk/*
    """.stripMargin.replaceAll(System.lineSeparator(), " ")
@@ -41,10 +39,10 @@ object Common {
     dockerCommands := dockerCommands.value.flatMap {
       case cmd @ Cmd("ADD", _) =>
         List(
+          Cmd("ENV", "PATH /home/docker/.composer/vendor/bin:$PATH"),
           Cmd("RUN", "adduser -u 2004 -D docker"),
           cmd,
-          Cmd("RUN", installPHPCPD),
-          Cmd("ENV", "NODE_PATH /usr/lib/node_modules"))
+          Cmd("RUN", installPHPCPD))
       case other => List(other)
     })
 

@@ -24,11 +24,11 @@ docker run -it -v $PWD/src/test/resources:/src codacy/codacy-duplication-phpcpd:
 ## Test
 
 Before running the tests, you need to install PHPCPD:
-  * Install php 
+  * Install php (make sure it is php7.1)
   * Install [composer](https://getcomposer.org/download/)
-  * Install PHPCPD using: `composer global require "sebastian/phpcpd=2.0.1" (composer will also install extra dependencies)
-  * Make the `phpcpd command available in $PATH
-  ``
+  * Install PHPCPD using: `composer global require "sebastian/phpcpd=2.0.1"` (composer will also install extra dependencies)
+  * Make the `phpcpd command available in $PATH`
+  
 For more information check out the tools [README](https://github.com/sebastianbergmann/phpcpd/blob/master/README.md).
 
 After that, you can run the tests:
