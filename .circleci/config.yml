@@ -22,19 +22,19 @@ references:
   restore_source_code: &restore_source_code
     restore_cache:
       keys:
-        - source-code-0.0.1-{{ .Branch }}-{{ .Revision }}
-        - source-code-0.0.1-{{ .Branch }}
-        - source-code-0.0.1
+        - source-code-0.02-{{ .Branch }}-{{ .Revision }}
+        - source-code-0.02-{{ .Branch }}
+        - source-code-0.02
   restore_dependencies: &restore_dependencies
     restore_cache:
       keys:
-        - sbt-ivy2-dependencies-0.0.1-{{ checksum "/tmp/dependencies.cache.tmp" }}
-        - sbt-ivy2-dependencies-0.0.1
+        - sbt-ivy2-dependencies-0.02-{{ checksum "/tmp/dependencies.cache.tmp" }}
+        - sbt-ivy2-dependencies-0.02
   restore_build: &restore_build
     restore_cache:
       keys:
-        - sbt-build-0.0.1-{{ .Branch }}-{{ .Revision }}
-        - sbt-build-0.0.1
+        - sbt-build-0.02-{{ .Branch }}-{{ .Revision }}
+        - sbt-build-0.02
 
   setup_dependencies_key: &setup_dependencies_key
     run:
@@ -53,7 +53,7 @@ jobs:
       - *restore_source_code
       - checkout
       - save_cache:
-          key: source-code-0.0.1-{{ .Branch }}-{{ .Revision }}
+          key: source-code-0.02-{{ .Branch }}-{{ .Revision }}
           paths:
             - ~/workdir
 
@@ -71,7 +71,7 @@ jobs:
           paths:
             - ~/.ivy2
             - ~/.sbt
-          key: sbt-ivy2-dependencies-0.0.1-{{ checksum "/tmp/dependencies.cache.tmp" }}
+          key: sbt-ivy2-dependencies-0.02-{{ checksum "/tmp/dependencies.cache.tmp" }}
 
   compile:
     <<: *default_java_job
@@ -87,7 +87,7 @@ jobs:
           paths:
             - ~/workdir/target
             - ~/workdir/project/target
-          key: sbt-build-0.0.1-{{ .Branch }}-{{ .Revision }}
+          key: sbt-build-0.02-{{ .Branch }}-{{ .Revision }}
 
   test:
     <<: *default_java_job
@@ -109,7 +109,7 @@ jobs:
             wget -q https://packages.sury.org/php/apt.gpg -O- | sudo apt-key add -
             echo "deb https://packages.sury.org/php/ stretch main" | sudo tee /etc/apt/sources.list.d/php.list
             sudo apt-get -y update
-            sudo apt-get -y install php7.0 php7.0-common php7.0-xml
+            sudo apt-get -y install php7.1 php7.1-common php7.1-xml
             mkdir -p $HOME/bin
             curl -sS https://getcomposer.org/installer | php -- --install-dir=$HOME/bin --filename=composer
             composer global require "sebastian/phpcpd=`cat .phpcpd-version`"

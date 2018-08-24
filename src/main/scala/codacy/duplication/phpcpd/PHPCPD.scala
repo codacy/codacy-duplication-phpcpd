@@ -32,16 +32,29 @@ object PHPCPD extends DuplicationTool {
   }
 
   private def runTool(rootDirectory: File, outputFile: File): Try[CommandResult] = {
-    val command = getCommand(rootDirectory, outputFile)
-    CommandRunner.exec(command, Option(rootDirectory)).toTry
+    getCommand(rootDirectory, outputFile).flatMap { command =>
+      CommandRunner.exec(command, Option(rootDirectory)).toTry
+    }
   }
 
   private def parseToolResult(rootDirectory: File, temporaryFile: File): Try[List[DuplicationClone]] = {
     Try(XML.loadFile(temporaryFile)).flatMap(parseXml(rootDirectory, _))
   }
 
-  private def getCommand(rootDirectory: File, outputFile: File): List[String] = {
-    List("phpcpd", "--log-pmd", outputFile.getCanonicalPath, rootDirectory.getCanonicalPath)
+  private def getCommand(rootDirectory: File, outputFile: File): Try[List[String]] = {
+    (for {
+      whichOutput <- CommandRunner.exec(List("which", "phpcpd"))
+      phpCpdLocation <- whichOutput.stdout.headOption.toRight(new Throwable("phpcpd is not available in $PATH"))
+    } yield {
+      List(
+        "php",
+        "-d",
+        "memory_limit=-1",
+        phpCpdLocation,
+        "--log-pmd",
+        outputFile.getCanonicalPath,
+        rootDirectory.getCanonicalPath)
+    }).toTry
   }
 
   private def parseXml(rootDirectory: File, elem: Elem): Try[List[DuplicationClone]] = {
