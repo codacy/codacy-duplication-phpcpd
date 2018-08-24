@@ -2,7 +2,7 @@
 
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/255bfb481d0742caac7c898f847baf5c)](https://www.codacy.com/app/Codacy/codacy-duplication-phpcpd?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=codacy/codacy-duplication-phpcpd&amp;utm_campaign=Badge_Grade)
 [![Build Status](https://circleci.com/gh/codacy/codacy-duplication-phpcpd.svg?style=shield&circle-token=:circle-token)](https://circleci.com/gh/codacy/codacy-duplication-phpcpd)
-[![Docker Version](https://images.microbadger.com/badges/version/codacy/codacy-duplciation-phpcpd.svg)](https://microbadger.com/images/codacy/codacy-duplication-phpcpd "Get your own version badge on microbadger.com")
+[![Docker Version](https://images.microbadger.com/badges/version/codacy/codacy-duplication-phpcpd.svg)](https://microbadger.com/images/codacy/codacy-duplication-phpcpd "Get your own version badge on microbadger.com")
 
 This is the docker engine we use at Codacy to detect PHP code duplication using [PHPCPD](https://github.com/sebastianbergmann/phpcpd/).
 
