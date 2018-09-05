@@ -154,7 +154,7 @@ jobs:
       - *restore_build
       - run:
           name: Publish local docker
-          command: ./scripts/publish.sh 0.1.$CIRCLE_BUILD_NUM
+          command: ./scripts/publish.sh 2.0.$CIRCLE_BUILD_NUM
 
   publish_dockerhub:
     machine: true
@@ -168,7 +168,7 @@ jobs:
       - *restore_build
       - run:
           name: Publish local docker
-          command: ./scripts/publish.sh 0.1.$CIRCLE_BUILD_NUM
+          command: ./scripts/publish.sh 2.0.$CIRCLE_BUILD_NUM
       - deploy:
           name: Push docker to DockerHub
           command: |
@@ -176,7 +176,7 @@ jobs:
             if [ "${CIRCLE_BRANCH}" == "master" ]; then
               docker push codacy/$CIRCLE_PROJECT_REPONAME:latest
             fi
-            docker push codacy/$CIRCLE_PROJECT_REPONAME:0.1.$CIRCLE_BUILD_NUM
+            docker push codacy/$CIRCLE_PROJECT_REPONAME:2.0.$CIRCLE_BUILD_NUM
 
 workflows:
   version: 2
