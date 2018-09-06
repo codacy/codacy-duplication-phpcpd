@@ -1,15 +1,15 @@
 package codacy.duplication.phpcpd
 
-import codacy.docker.api.Source
-import codacy.docker.api.duplication.{DuplicationClone, DuplicationCloneFile}
-import com.codacy.api.dtos.Languages
+import com.codacy.plugins.api.Source
+import com.codacy.plugins.api.duplication.{DuplicationClone, DuplicationCloneFile}
+import com.codacy.plugins.api.languages.Languages
 import org.specs2.mutable.Specification
 
 import scala.util.{Failure, Success, Try}
 
 class PHPCPDSpec extends Specification {
 
-  private val expectedCloneLines =
+  private val expectedCloneLines: String =
     """    public function insert($item) {
       |        $node = new BinaryNode($item);
       |        if ($this->isEmpty()) {
