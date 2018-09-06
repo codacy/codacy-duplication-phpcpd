@@ -3,19 +3,19 @@ package codacy.duplication.phpcpd
 import java.io.File
 import java.nio.file.Paths
 
-import codacy.docker.api.{DuplicationConfiguration, Source}
-import codacy.docker.api.duplication.{DuplicationClone, DuplicationCloneFile, DuplicationTool}
-import codacy.docker.api.utils.{CommandResult, CommandRunner}
-import com.codacy.api.dtos.{Language, Languages}
+import com.codacy.duplication.scala.seed.utils.{CommandResult, CommandRunner}
+import com.codacy.plugins.api.duplication.{DuplicationClone, DuplicationCloneFile, DuplicationTool}
+import com.codacy.plugins.api.languages.{Language, Languages}
+import com.codacy.plugins.api.{Options, Source}
 
 import scala.util.{Failure, Properties, Try}
 import scala.xml.{Elem, XML}
 
 object PHPCPD extends DuplicationTool {
 
-  def apply(path: Source.Directory,
-            language: Option[Language],
-            options: Map[DuplicationConfiguration.Key, DuplicationConfiguration.Value]): Try[List[DuplicationClone]] = {
+  override def apply(path: Source.Directory,
+                     language: Option[Language],
+                     options: Map[Options.Key, Options.Value]): Try[List[DuplicationClone]] = {
     language match {
       case Some(lang) if lang != Languages.PHP =>
         Failure(new Exception(s"PHPCPD only supports PHP. Provided language: ${lang.name}"))
@@ -86,7 +86,7 @@ object PHPCPD extends DuplicationTool {
     }).get()
   }
 
-  private def handleFailure(resultFromTool: CommandResult, e: Throwable) = {
+  private def handleFailure(resultFromTool: CommandResult, e: Throwable): Failure[Nothing] = {
     val msg =
       s"""
          |PHPCPD exited with code ${resultFromTool.exitCode}
