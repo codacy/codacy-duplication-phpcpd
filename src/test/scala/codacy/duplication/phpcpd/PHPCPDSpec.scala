@@ -3,6 +3,7 @@ package codacy.duplication.phpcpd
 import com.codacy.plugins.api.Source
 import com.codacy.plugins.api.duplication.{DuplicationClone, DuplicationCloneFile}
 import com.codacy.plugins.api.languages.Languages
+import org.specs2.matcher.MatchResult
 import org.specs2.mutable.Specification
 
 import scala.util.{Failure, Success, Try}
@@ -25,7 +26,7 @@ class PHPCPDSpec extends Specification {
       23,
       List(
         DuplicationCloneFile("codacy/duplication/php/FileWithDuplication1.php", 68, 91),
-        DuplicationCloneFile("codacy/duplication/php/FileWithDuplication.php", 107, 130))))
+        DuplicationCloneFile("codacy/duplication/php/FileWithDuplication.php", 107, 130)))).sortBy(_.nrTokens)
 
   "PHPCPD" should {
 
@@ -36,7 +37,12 @@ class PHPCPDSpec extends Specification {
 
       duplicationResults must beLike {
         case Success(duplication) =>
-          duplication.map(_.copy(cloneLines = "")) must containTheSameElementsAs(expectedDuplication)
+          val clonesWithoutLines = duplication.map(_.copy(cloneLines = "")).sortBy(_.nrTokens)
+
+          clonesWithoutLines must have size 2
+
+          testClone(clonesWithoutLines(0), expectedDuplication(0))
+          testClone(clonesWithoutLines(1), expectedDuplication(1))
       }
 
     }
@@ -54,4 +60,12 @@ class PHPCPDSpec extends Specification {
     }
 
   }
+
+  private def testClone(clone: DuplicationClone,
+                        expectedClone: DuplicationClone): MatchResult[Seq[DuplicationCloneFile]] = {
+    clone.nrLines must beEqualTo(expectedClone.nrLines)
+    clone.nrTokens must beEqualTo(expectedClone.nrTokens)
+    clone.files must containTheSameElementsAs(expectedClone.files)
+  }
+
 }
