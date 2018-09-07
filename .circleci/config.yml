@@ -19,22 +19,16 @@ references:
       <<: *host_environment_defaults
     working_directory: ~/workdir
 
-  restore_source_code: &restore_source_code
-    restore_cache:
-      keys:
-        - source-code-0.02-{{ .Branch }}-{{ .Revision }}
-        - source-code-0.02-{{ .Branch }}
-        - source-code-0.02
   restore_dependencies: &restore_dependencies
     restore_cache:
       keys:
-        - sbt-ivy2-dependencies-0.02-{{ checksum "/tmp/dependencies.cache.tmp" }}
-        - sbt-ivy2-dependencies-0.02
+        - sbt-ivy2-dependencies-0.1.0-{{ checksum "/tmp/dependencies.cache.tmp" }}
+        - sbt-ivy2-dependencies-0.1.0
   restore_build: &restore_build
     restore_cache:
       keys:
-        - sbt-build-0.02-{{ .Branch }}-{{ .Revision }}
-        - sbt-build-0.02
+        - sbt-build-0.1.0-{{ .Branch }}-{{ .Revision }}
+        - sbt-build-0.1.0
 
   setup_dependencies_key: &setup_dependencies_key
     run:
@@ -47,20 +41,10 @@ references:
           project/Dependencies.scala > /tmp/dependencies.cache.tmp
 
 jobs:
-  checkout_code:
-    <<: *default_java_job
-    steps:
-      - *restore_source_code
-      - checkout
-      - save_cache:
-          key: source-code-0.02-{{ .Branch }}-{{ .Revision }}
-          paths:
-            - ~/workdir
-
   sbt_dependencies:
     <<: *default_java_job
     steps:
-      - *restore_source_code
+      - checkout
       - *setup_dependencies_key
       - *restore_dependencies
       - run:
@@ -71,12 +55,12 @@ jobs:
           paths:
             - ~/.ivy2
             - ~/.sbt
-          key: sbt-ivy2-dependencies-0.02-{{ checksum "/tmp/dependencies.cache.tmp" }}
+          key: sbt-ivy2-dependencies-0.1.0-{{ checksum "/tmp/dependencies.cache.tmp" }}
 
   compile:
     <<: *default_java_job
     steps:
-      - *restore_source_code
+      - checkout
       - *setup_dependencies_key
       - *restore_dependencies
       - *restore_build
@@ -87,12 +71,12 @@ jobs:
           paths:
             - ~/workdir/target
             - ~/workdir/project/target
-          key: sbt-build-0.02-{{ .Branch }}-{{ .Revision }}
+          key: sbt-build-0.1.0-{{ .Branch }}-{{ .Revision }}
 
   test:
     <<: *default_java_job
     steps:
-      - *restore_source_code
+      - checkout
       - *setup_dependencies_key
       - *restore_dependencies
       - *restore_build
@@ -109,7 +93,7 @@ jobs:
             wget -q https://packages.sury.org/php/apt.gpg -O- | sudo apt-key add -
             echo "deb https://packages.sury.org/php/ stretch main" | sudo tee /etc/apt/sources.list.d/php.list
             sudo apt-get -y update
-            sudo apt-get -y install php7.1 php7.1-common php7.1-xml
+            sudo apt-get -y install php5.6 php5.6-common php5.6-xml
             mkdir -p $HOME/bin
             curl -sS https://getcomposer.org/installer | php -- --install-dir=$HOME/bin --filename=composer
             composer global require "sebastian/phpcpd=`cat .phpcpd-version`"
@@ -134,7 +118,7 @@ jobs:
   lint:
     <<: *default_java_job
     steps:
-      - *restore_source_code
+      - checkout
       - *setup_dependencies_key
       - *restore_dependencies
       - *restore_build
@@ -148,7 +132,7 @@ jobs:
       <<: *host_environment_defaults
     working_directory: ~/workdir
     steps:
-      - *restore_source_code
+      - checkout
       - *setup_dependencies_key
       - *restore_dependencies
       - *restore_build
@@ -162,7 +146,7 @@ jobs:
       <<: *host_environment_defaults
     working_directory: ~/workdir
     steps:
-      - *restore_source_code
+      - checkout
       - *setup_dependencies_key
       - *restore_dependencies
       - *restore_build
@@ -182,13 +166,9 @@ workflows:
   version: 2
   test-and-publish:
     jobs:
-      - checkout_code
-      - sbt_dependencies:
-          requires:
-            - checkout_code
+      - sbt_dependencies
       - compile:
           requires:
-            - checkout_code
             - sbt_dependencies
       - test:
           requires:

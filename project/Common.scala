@@ -1,6 +1,6 @@
 import com.typesafe.sbt.packager.Keys._
-import com.typesafe.sbt.packager.docker.{Cmd, DockerAlias}
 import com.typesafe.sbt.packager.docker.DockerPlugin.autoImport.Docker
+import com.typesafe.sbt.packager.docker.{Cmd, DockerAlias}
 import sbt.Def
 import sbt.Keys.{name, version}
 
@@ -8,21 +8,19 @@ object Common {
 
   private val defaultDockerInstallationPath = "/opt/codacy"
 
-  private val phpCPDVersion =
+  private val phpCPDVersion: String =
     scala.io.Source.fromFile(".phpcpd-version").mkString.trim
 
-  private val installPHPCPD =
-    s"""
-       |export COMPOSER_HOME=/home/docker/.composer &&
-       |mkdir -p /home/docker/.composer &&
-       |chown -R docker:docker /home/docker &&
-       |apk update &&
-       |apk add bash curl git php7 php7-xml php7-cli php7-pdo php7-curl php7-json php7-phar php7-ctype php7-openssl php7-dom php7-mbstring php7-iconv &&
-       |curl -sS https://getcomposer.org/installer | php7 -- --install-dir=/usr/bin --filename=composer &&
-       |su - docker -c 'composer global require "sebastian/phpcpd=$phpCPDVersion"' &&
-       |rm -rf /usr/bin/composer &&
-       |rm -rf /tmp/* &&
-       |rm -rf /var/cache/apk/*
+  private val installPHPCPD: String =
+    s"""|export COMPOSER_HOME=/home/docker/.composer &&
+        |mkdir -p /home/docker/.composer &&
+        |chown -R docker:docker /home/docker &&
+        |apk --update --no-cache add openjdk8-jre bash curl git php5 php5-xml php5-cli php5-pdo php5-curl php5-json php5-phar php5-ctype php5-openssl php5-dom &&
+        |curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer &&
+        |su - docker -c 'composer global require "sebastian/phpcpd=$phpCPDVersion"' &&
+        |rm -rf /usr/bin/composer &&
+        |rm -rf /tmp/* &&
+        |rm -rf /var/cache/apk/*
    """.stripMargin.replaceAll(System.lineSeparator(), " ")
 
   val dockerSettings: Seq[Def.Setting[_]] = Seq(
@@ -30,7 +28,7 @@ object Common {
     dockerAlias := DockerAlias(None, Some("codacy"), name.value, Some(version.value)),
     version in Docker := version.value,
     maintainer in Docker := "Codacy <team@codacy.com>",
-    dockerBaseImage := "library/openjdk:8-jre-alpine",
+    dockerBaseImage := "library/php:5.6-alpine3.8",
     dockerUpdateLatest := true,
     defaultLinuxInstallLocation in Docker := defaultDockerInstallationPath,
     daemonUser in Docker := "docker",
@@ -44,7 +42,8 @@ object Common {
           cmd,
           Cmd("RUN", installPHPCPD))
       case other => List(other)
-    })
+    }
+  )
 
   val compilerFlags: Seq[String] = Seq(
     "-deprecation", // Emit warning and location for usages of deprecated APIs.
