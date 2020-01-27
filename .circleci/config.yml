@@ -2,12 +2,13 @@
 version: 2.1
 
 orbs:
-  codacy: codacy/base@2.1.1
+  codacy: codacy/base@2.2.1
   codacy_plugins_test: codacy/plugins-test@0.8.0
 
 jobs:
   test:
-    machine: true
+    docker:
+      - image: circleci/openjdk:8-jdk
     working_directory: ~/workdir
     steps:
       - attach_workspace:
@@ -22,8 +23,8 @@ jobs:
           command: |
             sudo apt-get -y update
             sudo apt install ca-certificates apt-transport-https
-            sudo apt-get install -y software-properties-common
-            sudo add-apt-repository ppa:ondrej/php
+            wget -q https://packages.sury.org/php/apt.gpg -O- | sudo apt-key add -
+            echo "deb https://packages.sury.org/php/ stretch main" | sudo tee /etc/apt/sources.list.d/php.list
             sudo apt-get -y update
             sudo apt-get -y install php5.6 php5.6-common php5.6-xml
             mkdir -p $HOME/bin
@@ -95,21 +96,19 @@ workflows:
           run_json_tests: false
           requires:
             - publish_docker_local
-      - codacy/shell:
-          name: publish_dockerhub
+      - codacy/publish_docker:
           context: CodacyDocker
-          cmd: |
-            docker load --input docker-image.tar
-            docker login -u "$DOCKER_USER" -p "$DOCKER_PASS"
-            docker tag "$CIRCLE_PROJECT_REPONAME" "codacy/$CIRCLE_PROJECT_REPONAME:$(cat .version)"
-            docker tag "$CIRCLE_PROJECT_REPONAME" "codacy/$CIRCLE_PROJECT_REPONAME:latest"
-            docker push "codacy/$CIRCLE_PROJECT_REPONAME:$(cat .version)"
-            docker push "codacy/$CIRCLE_PROJECT_REPONAME:latest"
           requires:
             - test
             - lint
+            - plugins_test
             - publish_docker_local
           filters:
             branches:
               only:
                 - master
+      - codacy/tag_version:
+           name: tag_version
+           context: CodacyAWS
+           requires:
+             - codacy/publish_docker
