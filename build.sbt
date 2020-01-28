@@ -24,17 +24,9 @@ lazy val codacyDuplicationPHPCPD = project
         resolvers := Seq("Sonatype OSS Snapshots".at("https://oss.sonatype.org/content/repositories/releases")) ++ resolvers.value,
         scalacOptions ++= Common.compilerFlags,
         scalacOptions in Test ++= Seq("-Yrangepos"),
-        scalacOptions in (Compile, console) --= Seq("-Ywarn-unused:imports",
-                                                    "-Xfatal-warnings")
-      )),
+        scalacOptions in (Compile, console) --= Seq("-Ywarn-unused:imports", "-Xfatal-warnings"))),
     // App Dependencies
-    libraryDependencies ++= Seq(
-      Dependencies.Codacy.duplicationScalaSeed,
-      Dependencies.playJson,
-      Dependencies.scalaXml
-    ),
+    libraryDependencies ++= Seq(Dependencies.Codacy.duplicationScalaSeed, Dependencies.playJson, Dependencies.scalaXml),
     // Test Dependencies
-    libraryDependencies ++= Seq(Dependencies.specs2).map(_ % Test)
-  )
+    libraryDependencies ++= Seq(Dependencies.specs2).map(_ % Test))
   .settings(Common.dockerSettings: _*)
-
