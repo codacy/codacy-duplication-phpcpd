@@ -37,9 +37,14 @@ object Common {
       case cmd @ Cmd("ADD", _) =>
         List(
           Cmd("ENV", "PATH /home/docker/.composer/vendor/bin:$PATH"),
-          Cmd("RUN", "adduser -u 2004 -D docker"),
           cmd,
+          Cmd("RUN", s"mv $defaultDockerInstallationPath/docs /docs"),
           Cmd("RUN", installPHPCPD))
+
+      case cmd @ Cmd("WORKDIR", _) =>
+        List(
+          Cmd("RUN", "adduser -u 2004 -D docker"),
+          cmd)
       case other => List(other)
     }
   )

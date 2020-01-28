@@ -1,0 +1,23 @@
+<checkstyle version="4.3">
+    <property name="ignoreMessage" />
+    <duplication nrTokens="92" nrLines="23" message="">
+        <file name="Selenium2.php">
+            <property name="startLine" value="68" />
+            <property name="endLine" value="91" />
+        </file>
+        <file name="Selenium.php">
+            <property name="startLine" value="107" />
+            <property name="endLine" value="130" />
+        </file>
+    </duplication>
+    <duplication nrTokens="113" nrLines="27" message="">
+        <file name="Selenium2.php">
+            <property name="startLine" value="131" />
+            <property name="endLine" value="158" />
+        </file>
+        <file name="Selenium.php">
+            <property name="startLine" value="69" />
+            <property name="endLine" value="96" />
+        </file>
+    </duplication>
+</checkstyle>
