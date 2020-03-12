@@ -1,7 +1,7 @@
 # codacy-duplication-phpcpd
 
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/255bfb481d0742caac7c898f847baf5c)](https://www.codacy.com/app/Codacy/codacy-duplication-phpcpd?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=codacy/codacy-duplication-phpcpd&amp;utm_campaign=Badge_Grade)
-[![Codacy Badge](https://api.codacy.com/project/badge/Coverage/255bfb481d0742caac7c898f847baf5c)](https://www.codacy.com/app/Codacy/codacy-duplication-phpcpd?utm_source=github.com&utm_medium=referral&utm_content=codacy/codacy-duplication-phpcpd&utm_campaign=Badge_Coverage)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/255bfb481d0742caac7c898f847baf5c)](https://www.codacy.com/gh/codacy/codacy-duplication-phpcpd?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=codacy/codacy-duplication-phpcpd&amp;utm_campaign=Badge_Grade)
+[![Codacy Badge](https://api.codacy.com/project/badge/Coverage/255bfb481d0742caac7c898f847baf5c)](https://www.codacy.com/gh/codacy/codacy-duplication-phpcpd?utm_source=github.com&utm_medium=referral&utm_content=codacy/codacy-duplication-phpcpd&utm_campaign=Badge_Coverage)
 [![Build Status](https://circleci.com/gh/codacy/codacy-duplication-phpcpd.svg?style=shield&circle-token=:circle-token)](https://circleci.com/gh/codacy/codacy-duplication-phpcpd)
 [![Docker Version](https://images.microbadger.com/badges/version/codacy/codacy-duplication-phpcpd.svg)](https://microbadger.com/images/codacy/codacy-duplication-phpcpd "Get your own version badge on microbadger.com")
 
