@@ -35,7 +35,7 @@ For more information check out the tools [README](https://github.com/sebastianbe
 After that, you can run the tests:
 
 ```bash
-./scripts/test.sh
+sbt test
 ```
 
 ## What is Codacy
