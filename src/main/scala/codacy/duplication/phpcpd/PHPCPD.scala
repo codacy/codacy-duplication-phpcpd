@@ -74,7 +74,7 @@ object PHPCPD extends DuplicationTool {
 
         val code = (duplication \ "codefragment").text
         DuplicationClone(code, tokens, lines, files)
-      }(collection.breakOut)
+      }.toList
     }
   }
 
