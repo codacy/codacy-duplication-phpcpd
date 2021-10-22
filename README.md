@@ -12,7 +12,7 @@ This is the docker engine we use at Codacy to detect PHP code duplication using 
 You can create the docker by doing:
 
 ```bash
-./scripts/publish.sh
+sbt docker:publishLocal
 ```
 
 The docker is ran with the following command:

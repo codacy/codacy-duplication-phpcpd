@@ -30,9 +30,10 @@ val installPHPCPD: String =
   s"""|export COMPOSER_HOME=/home/docker/.composer &&
       |mkdir -p /home/docker/.composer &&
       |chown -R docker:docker /home/docker &&
-      |apk --update --no-cache add openjdk8-jre bash curl git php5 php5-xml php5-cli php5-pdo php5-curl php5-json php5-phar php5-ctype php5-openssl php5-dom &&
+      |apk --update --no-cache add openjdk8-jre bash curl git php8 php8-xml php8-cli php8-pdo php8-curl php8-json php8-phar php8-ctype php8-openssl php8-dom &&
       |curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer &&
       |su - docker -c 'composer global require "sebastian/phpcpd=$phpCPDVersion"' &&
+      |apk del curl &&
       |rm -rf /usr/bin/composer &&
       |rm -rf /tmp/* &&
       |rm -rf /var/cache/apk/*""".stripMargin.replaceAll(System.lineSeparator(), " ")
@@ -40,7 +41,7 @@ val installPHPCPD: String =
 Docker / packageName := packageName.value
 Docker / version := version.value
 Docker / maintainer := "Codacy <team@codacy.com>"
-dockerBaseImage := "library/php:5.6-alpine3.8"
+dockerBaseImage := "php:8.0-alpine3.14"
 dockerUpdateLatest := true
 Docker / defaultLinuxInstallLocation := defaultDockerInstallationPath
 Docker / daemonUser := "docker"
