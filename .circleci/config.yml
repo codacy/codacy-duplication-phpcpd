@@ -4,51 +4,6 @@ orbs:
   codacy: codacy/base@2.2.1
   codacy_plugins_test: codacy/plugins-test@0.15.4
 
-jobs:
-  test:
-    docker:
-      - image: circleci/openjdk:8-jdk
-    working_directory: ~/workdir
-    steps:
-      - attach_workspace:
-          at: ~/workdir
-      - run:
-          name: Setup environment
-          command: |
-            echo 'export COMPOSER_HOME="$HOME/.composer"' >> $BASH_ENV
-            echo 'export PATH="$HOME/bin:$COMPOSER_HOME/vendor/bin:$PATH"' >> $BASH_ENV
-      - run:
-          name: Install the tool
-          command: |
-            sudo apt-get -y update
-            sudo apt install ca-certificates apt-transport-https
-            wget -q https://packages.sury.org/php/apt.gpg -O- | sudo apt-key add -
-            echo "deb https://packages.sury.org/php/ stretch main" | sudo tee /etc/apt/sources.list.d/php.list
-            sudo apt-get -y update
-            sudo apt-get -y install php8 php8-common php8-xml
-            mkdir -p $HOME/bin
-            curl -sS https://getcomposer.org/installer | php -- --install-dir=$HOME/bin --filename=composer
-            composer global require "sebastian/phpcpd=`cat .phpcpd-version`"
-      - run:
-          name: Test
-          command: sbt coverage test coverageReport
-      - run:
-          name: Send results to Codacy
-          command: bash <(curl -Ls https://coverage.codacy.com/get.sh) report --skip
-      - run:
-          name: Store test reports
-          command: |
-            mkdir -p coverage-reports/scoverage
-            cp -f target/scala-2.13/coverage-report/cobertura.xml coverage-reports/scoverage/results.xml
-      - store_test_results:
-          path: coverage-reports
-      - store_artifacts:
-          path: target/scala-2.13/coverage-report
-      - store_artifacts:
-          path: target/scala-2.13/scoverage-report
-      - store_artifacts:
-          path: target/scala-2.13/scoverage-data
-
 workflows:
   version: 2
   test_and_publish:
@@ -64,24 +19,19 @@ workflows:
       - codacy/sbt:
           name: compile
           cmd: |
-            sbt compile test:compile
+            sbt compile
           persist_to_workspace: true
           requires:
             - codacy/checkout_and_version
             - sbt_dependencies
-      - test:
-          requires:
-            - compile
       - codacy/sbt:
           name: lint
           cmd: |
             sbt -mem 2048 "set scalafmtUseIvy in ThisBuild := false
                           ;scalafmt::test
-                          ;test:scalafmt::test
                           ;sbt:scalafmt::test
                           ;scapegoat
-                          ;scalafix --check
-                          ;test:scalafix --check"
+                          ;scalafix --check"
           requires:
             - compile
       - codacy/sbt:
@@ -103,7 +53,6 @@ workflows:
       - codacy/publish_docker:
           context: CodacyDocker
           requires:
-            - test
             - lint
             - plugins_test
             - publish_docker_local

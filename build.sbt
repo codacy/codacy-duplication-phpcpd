@@ -19,8 +19,7 @@ enablePlugins(DockerPlugin)
 libraryDependencies ++= Seq(
   "com.typesafe.play" %% "play-json" % "2.7.4",
   "org.scala-lang.modules" %% "scala-xml" % "1.2.0",
-  "com.codacy" %% "codacy-duplication-scala-seed" % "2.0.1",
-  "org.specs2" %% "specs2-core" % "4.8.0" % Test)
+  "com.codacy" %% "codacy-duplication-scala-seed" % "2.0.1")
 
 val defaultDockerInstallationPath = "/opt/codacy"
 
