@@ -7,7 +7,7 @@ val scala213 = "2.13.12"
 scalaVersion := scala213
 ThisBuild / scalaVersion := scala213
 ThisBuild / scalaBinaryVersion := scala213.split('.').take(2).mkString(".")
-ThisBuild / scapegoatVersion := "1.4.1"
+ThisBuild / scapegoatVersion := "2.1.5"
 ThisBuild / organization := "com.codacy"
 
 addCompilerPlugin(scalafixSemanticdb)
