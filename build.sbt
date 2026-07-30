@@ -2,15 +2,16 @@ import com.typesafe.sbt.packager.docker.Cmd
 
 name := "codacy-duplication-phpcpd"
 
-val scala213 = "2.13.1"
+val scala213 = "2.13.12"
 
 scalaVersion := scala213
 ThisBuild / scalaVersion := scala213
 ThisBuild / scalaBinaryVersion := scala213.split('.').take(2).mkString(".")
-ThisBuild / scapegoatVersion := "1.4.1"
+ThisBuild / scapegoatVersion := "2.1.5"
+ThisBuild / semanticdbEnabled := true
+ThisBuild / semanticdbVersion := "4.12.3"
 ThisBuild / organization := "com.codacy"
 
-addCompilerPlugin(scalafixSemanticdb)
 scalacOptions ++= Seq("-Yrangepos", "-Ywarn-unused")
 
 enablePlugins(JavaAppPackaging)
