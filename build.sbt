@@ -2,7 +2,7 @@ import com.typesafe.sbt.packager.docker.Cmd
 
 name := "codacy-duplication-phpcpd"
 
-val scala213 = "2.13.1"
+val scala213 = "2.13.12"
 
 scalaVersion := scala213
 ThisBuild / scalaVersion := scala213
